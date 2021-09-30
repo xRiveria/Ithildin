@@ -7,9 +7,9 @@
 *.filters
 *.suo
 *.user
+bin/
+bin-int/
 
 ## Binaries
 # Object Files, Executables, Libraries
 Binaries/
-bin/
-bin-int/
