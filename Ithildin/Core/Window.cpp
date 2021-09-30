@@ -78,6 +78,10 @@ namespace Raytracing
         {
             std::cout << "Failed to create GLFW Window.\n";
         }
+        else
+        {
+            std::cout << "Successfully created GLFW Window.\n";
+        }
 
         GLFWimage windowIcon;
         windowIcon.pixels = stbi_load("../Assets/Textures/WindowIcon.png", &windowIcon.width, &windowIcon.height, nullptr, 4);

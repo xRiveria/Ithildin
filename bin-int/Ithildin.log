@@ -1,2 +1,8 @@
-﻿  VulkanInstance.cpp
+﻿  Main.cpp
+  VulkanApplication.cpp
+  VulkanDevice.cpp
+  VulkanInstance.cpp
+  VulkanSurface.cpp
+  Generating Code...
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
   Ithildin.vcxproj -> D:\1) Github\Ithildin\bin\Ithildin.exe

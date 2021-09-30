@@ -11,3 +11,5 @@
 ## Binaries
 # Object Files, Executables, Libraries
 Binaries/
+bin/
+bin-int/
