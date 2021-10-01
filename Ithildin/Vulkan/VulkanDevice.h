@@ -16,6 +16,7 @@ namespace Raytracing
 
         VkPhysicalDevice GetPhysicalDevice() const { return m_PhysicalDevice; }
         const VulkanSurface& GetSurface() const { return m_Surface; }
+        const VulkanDebugUtilities& GetDebugUtilities() const { return m_DebugUtilities; }
 
         uint32_t GetGraphicsQueueFamilyIndex() const { return m_QueueGraphicsFamilyIndex; }
         uint32_t GetComputeQueueFamilyIndex() const { return m_QueueComputeFamilyIndex; }

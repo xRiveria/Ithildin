@@ -8,7 +8,7 @@ int main(int argc, int argv[])
 {
     const Raytracing::WindowSettings windowSettings
     {
-        "Ithildin - Raytracing (x64 Vulkan)",   // Title
+        "Ithildin - NVIDIA RTX Raytracing (x64 Vulkan) by Ryan Tan",   // Title
         1280,                                   // Width
         720,                                    // Height
         false,                                  // Is Cursor Disabled
@@ -25,7 +25,7 @@ int main(int argc, int argv[])
     /// Print Swapchain Information
     /// Run
 
-    Raytracing::VulkanApplication application(windowSettings, VkPresentModeKHR::VK_PRESENT_MODE_IMMEDIATE_KHR, true);
+    Raytracing::VulkanApplication application(windowSettings, VkPresentModeKHR::VK_PRESENT_MODE_IMMEDIATE_KHR, true); // We will present presents as soon as they're avaliable.
     SetVulkanDevice(application);
 
     while (true)
