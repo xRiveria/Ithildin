@@ -1,6 +1,6 @@
 #include "Window.h"
 #include "WindowUtilities.h"
-#include "../Importers/ImageImporter.h"
+#include "Importers/Internal/stb_image.h"
 
 namespace Raytracing
 {
