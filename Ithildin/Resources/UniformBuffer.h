@@ -2,7 +2,7 @@
 #include "Math/Math.h"
 #include <memory>
 
-namespace Raytracing
+namespace Vulkan
 {
     class VulkanBuffer;
     class VulkanDevice;
@@ -13,6 +13,7 @@ namespace Resources
 {
     class UniformBufferObject
     {
+    public:
         glm::mat4 m_ModelView;
         glm::mat4 m_Projection;
         glm::mat4 m_ModelViewInverse;
@@ -31,16 +32,16 @@ namespace Resources
     class UniformBuffer
     {
     public:
-        explicit UniformBuffer(const Raytracing::VulkanDevice& device);
+        explicit UniformBuffer(const Vulkan::VulkanDevice& device);
         UniformBuffer(UniformBuffer&& otherBuffer) noexcept;
         ~UniformBuffer();
 
-        const Raytracing::VulkanBuffer& GetBuffer() const { return *m_Buffer; }
+        const Vulkan::VulkanBuffer& GetBuffer() const { return *m_Buffer; }
 
         void SetValue(const UniformBufferObject& uniformBufferObject);
 
     private:
-        std::unique_ptr<Raytracing::VulkanBuffer> m_Buffer;
-        std::unique_ptr<Raytracing::VulkanDeviceMemory> m_Memory;
+        std::unique_ptr<Vulkan::VulkanBuffer> m_Buffer;
+        std::unique_ptr<Vulkan::VulkanDeviceMemory> m_Memory;
     };
 }

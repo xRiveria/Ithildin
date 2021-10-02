@@ -2,7 +2,7 @@
 #include "../Core/Window.h"
 #include "VulkanUtilities.h"
 
-namespace Raytracing
+namespace Vulkan
 {
     VulkanInstance::VulkanInstance(const Window& window, const std::vector<const char*>& validationLayers, uint32_t vulkanVersion) 
         : m_Window(window), m_ValidationLayers(validationLayers)

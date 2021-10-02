@@ -2,7 +2,7 @@
 #include "WindowUtilities.h"
 #include "Importers/Internal/stb_image.h"
 
-namespace Raytracing
+namespace Vulkan
 {
     namespace WindowCallbacks
     {

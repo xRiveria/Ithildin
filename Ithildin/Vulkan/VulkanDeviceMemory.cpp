@@ -2,7 +2,7 @@
 #include "VulkanDevice.h"
 #include <stdexcept>
 
-namespace Raytracing
+namespace Vulkan
 {
     VulkanDeviceMemory::VulkanDeviceMemory(const VulkanDevice& device, size_t size, uint32_t memoryTypeBits, VkMemoryAllocateFlags allocationFlags, VkMemoryPropertyFlags propertyFlags)
                                          : m_Device(device)

@@ -1,7 +1,7 @@
 #include "Core.h"
 #include <iostream>
 
-namespace Raytracing
+namespace Vulkan
 {
     void CheckResult(VkResult result, const char* operation)
     {

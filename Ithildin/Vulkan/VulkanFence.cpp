@@ -1,7 +1,7 @@
 #include "VulkanFence.h"
 #include "VulkanDevice.h"
 
-namespace Raytracing
+namespace Vulkan
 {
     VulkanFence::VulkanFence(const VulkanDevice& device, bool isSignaled) : m_Device(device)
     {

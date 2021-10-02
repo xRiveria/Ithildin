@@ -3,7 +3,7 @@
 #include "../Core/Core.h"
 #include "VulkanDebugUtilities.h"
 
-namespace Raytracing
+namespace Vulkan
 {
     class VulkanSurface;
 

@@ -5,7 +5,7 @@
 #include "SingleTimeCommands.h"
 #include <stdexcept>
 
-namespace Raytracing
+namespace Vulkan
 {
     VulkanImage::VulkanImage(const VulkanDevice& device, VkExtent2D extent, VkFormat format)
                            : VulkanImage(device, extent, format, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT) // Allows for sampling by a shader.

@@ -1,7 +1,7 @@
 #include "VulkanDebugUtilities.h"
 #include <stdexcept>
 
-namespace Raytracing
+namespace Vulkan
 {
     VulkanDebugUtilities::VulkanDebugUtilities(VkInstance vulkanInstance) 
         : vkSetDebugUtilsObjectNameEXT(reinterpret_cast<PFN_vkSetDebugUtilsObjectNameEXT>(vkGetInstanceProcAddr(vulkanInstance, "vkSetDebugUtilsObjectNameEXT")))

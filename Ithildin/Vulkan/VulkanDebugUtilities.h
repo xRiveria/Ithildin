@@ -1,7 +1,7 @@
 #pragma once
 #include "../Core/Core.h"
 
-namespace Raytracing
+namespace Vulkan
 {
     class VulkanDebugUtilities final
     {

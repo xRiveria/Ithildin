@@ -2,7 +2,7 @@
 #include "VulkanCommandPool.h"
 #include "VulkanDevice.h"
 
-namespace Raytracing
+namespace Vulkan
 {
     VulkanCommandBuffers::VulkanCommandBuffers(VulkanCommandPool& commandPool, uint32_t size) : m_CommandPool(commandPool)
     {

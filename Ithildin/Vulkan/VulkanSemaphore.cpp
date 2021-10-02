@@ -1,7 +1,7 @@
 #include "VulkanSemaphore.h"
 #include "VulkanDevice.h"
 
-namespace Raytracing
+namespace Vulkan
 {
     VulkanSemaphore::VulkanSemaphore(const VulkanDevice& device) : m_Device(device)
     {

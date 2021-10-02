@@ -2,7 +2,7 @@
 #include "VulkanSurface.h"
 #include "../Core/Window.h"
 
-namespace Raytracing
+namespace Vulkan
 {
     VulkanSurface::VulkanSurface(const VulkanInstance& instance) : m_Instance(instance)
     {

@@ -2,7 +2,7 @@
 #include "../Core/Core.h"
 #include "VulkanDeviceMemory.h"
 
-namespace Raytracing
+namespace Vulkan
 {
     class VulkanBuffer;
     class VulkanCommandPool;

@@ -2,7 +2,7 @@
 #include "../Core/Core.h"
 #include <vector>
 
-namespace Raytracing
+namespace Vulkan
 {
     class VulkanCommandPool;
 

@@ -1,19 +1,24 @@
 #include "Scene.h"
 #include "Vulkan/VulkanDebugUtilities.h"
 #include "Vulkan/VulkanBuffer.h"
+#include "Vulkan/VulkanBufferUtilities.h"
 #include "Vulkan/VulkanImageView.h"
 #include "Vulkan/SingleTimeCommands.h"
+#include "Vulkan/VulkanSampler.h"
+#include "Texture.h"
+#include "TextureImage.h"
 #include "Material.h"
 #include "Model.h"
 #include "Vertex.h"
+#include "Sphere.h"
 
 namespace Resources
 {
-    /*
-    Scene::Scene(Raytracing::VulkanCommandPool commandPool, std::vector<Model>&& models, std::vector<Texture>&& textures, bool usedForRayTracing)
+
+    Scene::Scene(Vulkan::VulkanCommandPool& commandPool, std::vector<Model>&& models, std::vector<Texture>&& textures, bool usedForRayTracing)
                : m_Models(std::move(models)), m_Textures(std::move(textures))
     {
-        // Concatenate all the models.
+        // Concatenate all the models in our scene.
         std::vector<Vertex> vertices;
         std::vector<uint32_t> indices;
         std::vector<Material> materials;
@@ -21,7 +26,7 @@ namespace Resources
         std::vector<VkAabbPositionsKHR> aabbs; // Specifying two opposing corners of an axis-aligned bounding box.
         std::vector<glm::uvec2> offsets;
 
-        for (const Model& model : models)
+        for (const auto& model : m_Models)
         {
             // Remember the index, vertex offset.
             const uint32_t indexOffset = static_cast<uint32_t>(indices.size());
@@ -33,7 +38,7 @@ namespace Resources
             // Copy model data one after the other by appending to the end of our vector.
             vertices.insert (vertices.end(), model.GetVertices().begin(), model.GetVertices().end());
             indices.insert(indices.end(), model.GetIndices().begin(), model.GetIndices().end());
-            // materials.insert(materials.end(), model.GetMaterials().begin(), model.GetMaterials().end());
+            materials.insert(materials.end(), model.GetMaterials().begin(), model.GetMaterials().end());
 
             // Adjust the material ID.
             for (size_t i = vertexOffset; i != vertices.size(); ++i)
@@ -42,7 +47,28 @@ namespace Resources
             }
 
             // Add optional procedurals.
+            const Sphere* const sphere = dynamic_cast<const Sphere*>(model.GetProcedural());
+            if (sphere != nullptr)
+            {
+                const std::pair<glm::vec3, glm::vec3> aabb = sphere->GetBoundingBox();
+                aabbs.push_back({ aabb.first.x, aabb.first.y, aabb.first.z, aabb.second.x, aabb.second.y, aabb.second.z });
+                procedurals.emplace_back(sphere->m_Center, sphere->m_Radius);
+            }
+            else
+            {
+                aabbs.emplace_back();
+                procedurals.emplace_back();
+            }
 
+            const int flag = usedForRayTracing ? VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT : 0;
+
+            Vulkan::VulkanBufferUtilities::CreateDeviceBuffer(commandPool, "Vertices", VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | flag, vertices, m_VertexBuffer, m_VertexBufferMemory);
+            Vulkan::VulkanBufferUtilities::CreateDeviceBuffer(commandPool, "Indices", VK_BUFFER_USAGE_INDEX_BUFFER_BIT | flag, indices, m_IndexBuffer, m_IndexBufferMemory);
+            Vulkan::VulkanBufferUtilities::CreateDeviceBuffer(commandPool, "Materials", flag, materials, m_MaterialBuffer, m_MaterialBufferMemory);
+            Vulkan::VulkanBufferUtilities::CreateDeviceBuffer(commandPool, "Offsets", flag, offsets, m_OffsetBuffer, m_OffsetBufferMemory);
+
+            Vulkan::VulkanBufferUtilities::CreateDeviceBuffer(commandPool, "AAVBBs", flag, aabbs, m_AABBBuffer, m_AABBBufferMemory);
+            Vulkan::VulkanBufferUtilities::CreateDeviceBuffer(commandPool, "Procedurals", flag, procedurals, m_ProceduralBuffer, m_ProceduralBufferMemory);
 
             // Update all textures.
             m_TextureImages.reserve(m_Textures.size());
@@ -51,8 +77,9 @@ namespace Resources
 
             for (size_t i = 0; i != m_Textures.size(); ++i)
             {
-                // m_TextureImages.emplace_back(new TextureImage(commandPool, m_Textures[i]));
-                // m_TextureImageViews[i] = m_TextureImages->
+                m_TextureImages.emplace_back(new TextureImage(commandPool, m_Textures[i]));
+                m_TextureImageViews[i] = m_TextureImages[i]->GetImageView().GetHandle();
+                m_TextureSamplers[i] = m_TextureImages[i]->GetSampler().GetHandle();
             }
         }
     }
@@ -76,6 +103,4 @@ namespace Resources
         m_VertexBuffer.reset();
         m_VertexBufferMemory.reset();     // Release memory after bound buffer has been destroyed.
     }
-            */
-
 }

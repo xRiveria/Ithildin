@@ -2,7 +2,7 @@
 #include "../Core/Core.h"
 #include <vector>
 
-namespace Raytracing
+namespace Vulkan
 {
     template <typename TValue>
     inline void GetEnumerateVector(VkResult(enumerate) (uint32_t*, TValue*), std::vector<TValue>& vector, const char* operation)

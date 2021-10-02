@@ -9,7 +9,7 @@
 #include <stdexcept>
 #include <string>
 
-namespace Raytracing
+namespace Vulkan
 {
     VulkanSwapChain::VulkanSwapChain(const VulkanDevice& device, VkPresentModeKHR requestedPresentationMode)
         : m_PhysicalDevice(device.GetPhysicalDevice()), m_Device(device)

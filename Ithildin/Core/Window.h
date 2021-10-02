@@ -4,7 +4,7 @@
 #include <functional>
 #include <vector>
 
-namespace Raytracing
+namespace Vulkan
 {
     class Window final
     {

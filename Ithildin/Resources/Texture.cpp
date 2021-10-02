@@ -5,7 +5,7 @@
 
 namespace Resources
 {
-    Texture Texture::LoadTexture(const std::string& filePath, const Raytracing::SamplerConfiguration& samplerConfiguration)
+    Texture Texture::LoadTexture(const std::string& filePath, const Vulkan::SamplerConfiguration& samplerConfiguration)
     {
         std::cout << "Loading: " << filePath << "...\n";
         const std::chrono::steady_clock::time_point timer = std::chrono::high_resolution_clock::now();

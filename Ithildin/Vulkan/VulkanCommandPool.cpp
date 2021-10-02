@@ -1,7 +1,7 @@
 #include "VulkanCommandPool.h"
 #include "VulkanDevice.h"
 
-namespace Raytracing
+namespace Vulkan
 {
     VulkanCommandPool::VulkanCommandPool(const VulkanDevice& device, uint32_t queueFamilyIndex, bool allowReset) : m_Device(device)
     {

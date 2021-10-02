@@ -1,7 +1,7 @@
 #include "VulkanBuffer.h"
 #include "SingleTimeCommands.h"
 
-namespace Raytracing
+namespace Vulkan
 {
     VulkanBuffer::VulkanBuffer(const VulkanDevice& device, size_t size, VkBufferUsageFlags usageFlags) : m_Device(device)
     {

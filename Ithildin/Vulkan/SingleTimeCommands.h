@@ -5,7 +5,7 @@
 #include "VulkanCommandPool.h"
 #include "VulkanCommandBuffers.h"
 
-namespace Raytracing
+namespace Vulkan
 {
     class SingleTimeCommands final
     {

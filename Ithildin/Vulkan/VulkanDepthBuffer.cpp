@@ -7,7 +7,7 @@
 #include "VulkanDebugUtilities.h"
 #include <stdexcept>
 
-namespace Raytracing
+namespace Vulkan
 {
     namespace DepthBufferUtilities
     {

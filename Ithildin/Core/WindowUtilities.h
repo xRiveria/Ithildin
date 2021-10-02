@@ -3,7 +3,7 @@
 #include <string>
 #include <iostream>
 
-namespace Raytracing
+namespace Vulkan
 {
     struct WindowSettings final
     {

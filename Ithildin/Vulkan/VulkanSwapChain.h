@@ -3,7 +3,7 @@
 #include <memory>
 #include <vector>
 
-namespace Raytracing
+namespace Vulkan
 {
     class VulkanDevice;
     class VulkanImageView;

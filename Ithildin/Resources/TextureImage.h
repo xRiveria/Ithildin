@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 
-namespace Raytracing
+namespace Vulkan
 {
     class VulkanCommandPool;
     class VulkanDeviceMemory;
@@ -17,16 +17,16 @@ namespace Resources
     class TextureImage final
     {
     public:
-        TextureImage(Raytracing::VulkanCommandPool& commandPool, const Texture& texture);
+        TextureImage(Vulkan::VulkanCommandPool& commandPool, const Texture& texture);
         ~TextureImage();
 
-        const Raytracing::VulkanImageView& GetImageView() const { return *m_ImageView; }
-        const Raytracing::VulkanSampler& GetSampler() const { return *m_ImageSampler; }
+        const Vulkan::VulkanImageView& GetImageView() const { return *m_ImageView; }
+        const Vulkan::VulkanSampler& GetSampler() const { return *m_ImageSampler; }
 
     private:
-        std::unique_ptr<Raytracing::VulkanImage> m_Image;
-        std::unique_ptr<Raytracing::VulkanDeviceMemory> m_ImageMemory;
-        std::unique_ptr<Raytracing::VulkanImageView> m_ImageView;
-        std::unique_ptr<Raytracing::VulkanSampler> m_ImageSampler;
+        std::unique_ptr<Vulkan::VulkanImage> m_Image;
+        std::unique_ptr<Vulkan::VulkanDeviceMemory> m_ImageMemory;
+        std::unique_ptr<Vulkan::VulkanImageView> m_ImageView;
+        std::unique_ptr<Vulkan::VulkanSampler> m_ImageSampler;
     };
 }

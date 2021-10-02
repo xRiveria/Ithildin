@@ -2,7 +2,7 @@
 #include "../Core/Core.h"
 #include "VulkanDeviceMemory.h"
 
-namespace Raytracing
+namespace Vulkan
 {
     class VulkanCommandPool;
     class VulkanDevice;
@@ -24,6 +24,6 @@ namespace Raytracing
 
     private:
         const VulkanDevice& m_Device;
-        VULKAN_HANDLE(VkBuffer, m_Buffer);
+        VULKAN_HANDLE(VkBuffer, m_Buffer)
     };
 }

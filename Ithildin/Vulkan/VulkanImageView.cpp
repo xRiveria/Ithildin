@@ -1,7 +1,7 @@
 #include "VulkanImageView.h"
 #include "VulkanDevice.h"
 
-namespace Raytracing
+namespace Vulkan
 {
     VulkanImageView::VulkanImageView(const VulkanDevice& device, VkImage image, VkFormat format, VkImageAspectFlags aspectFlags)
                                    : m_Device(device), m_VulkanImage(image), m_VulkanFormat(format)

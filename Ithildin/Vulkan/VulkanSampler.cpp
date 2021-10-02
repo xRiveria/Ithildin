@@ -1,7 +1,7 @@
 #include "VulkanSampler.h"
 #include "VulkanDevice.h"
 
-namespace Raytracing
+namespace Vulkan
 {
     VulkanSampler::VulkanSampler(const VulkanDevice& device, const SamplerConfiguration& configuration) : m_Device(device)
     {

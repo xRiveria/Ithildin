@@ -8,7 +8,7 @@ namespace Resources
     class Texture final
     {
     public:
-        static Texture LoadTexture(const std::string& filePath, const Raytracing::SamplerConfiguration& samplerConfiguration);
+        static Texture LoadTexture(const std::string& filePath, const Vulkan::SamplerConfiguration& samplerConfiguration);
 
         Texture() = default;
         Texture(const Texture& texture) = default;
@@ -22,7 +22,7 @@ namespace Resources
         Texture(int width, int height, int channels, unsigned char* pixels);
 
     private:
-        Raytracing::SamplerConfiguration m_SamplerConfiguration;
+        Vulkan::SamplerConfiguration m_SamplerConfiguration;
         int m_Width;
         int m_Height;
         int m_Channels;

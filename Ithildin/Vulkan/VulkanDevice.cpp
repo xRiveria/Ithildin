@@ -6,7 +6,7 @@
 #include <iostream>
 #include <set>
 
-namespace Raytracing
+namespace Vulkan
 {
     namespace QueueUtilities
     {

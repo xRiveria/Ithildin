@@ -11,7 +11,7 @@ public:                                                 \
 private:                                                \
     VulkanHandleType Name;
 
-namespace Raytracing
+namespace Vulkan
 {
     void CheckResult(VkResult result, const char* operation);
     const char* ToString(VkResult result);

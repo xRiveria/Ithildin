@@ -2,7 +2,7 @@
 #include "VulkanInstance.h"
 #include <iostream>
 
-namespace Raytracing
+namespace Vulkan
 {
     namespace DebugUtilities
     {
