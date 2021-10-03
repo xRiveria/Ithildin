@@ -1,4 +1,4 @@
-#include "VulkanApplication.h"
+#include "Application.h"
 #include "VulkanInstance.h"
 #include "VulkanDebugMessenger.h"
 #include "VulkanSurface.h"
@@ -222,21 +222,7 @@ namespace Vulkan
 
     void Application::SetPhysicalDevice(VkPhysicalDevice physicalDevice, std::vector<const char*>& requiredExtensions, VkPhysicalDeviceFeatures& deviceFeatures, void* nextDeviceFeatures)
     {
-        VkPhysicalDeviceBufferDeviceAddressFeatures bufferDeviceAddressFeatures = {};
-        bufferDeviceAddressFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES;
-        bufferDeviceAddressFeatures.pNext = nextDeviceFeatures;
-        bufferDeviceAddressFeatures.bufferDeviceAddress = true;
-
-        VkPhysicalDeviceDescriptorIndexingFeatures indexingFeatures = {};
-        indexingFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES;
-        indexingFeatures.pNext = &bufferDeviceAddressFeatures;
-        indexingFeatures.runtimeDescriptorArray = true;
-        indexingFeatures.shaderSampledImageArrayNonUniformIndexing = true;
-
-        deviceFeatures.samplerAnisotropy = true;
-        deviceFeatures.fillModeNonSolid = true;
-
-        m_Device.reset(new VulkanDevice(physicalDevice, *m_Surface, requiredExtensions, deviceFeatures, &indexingFeatures));
+        m_Device.reset(new VulkanDevice(physicalDevice, *m_Surface, requiredExtensions, deviceFeatures, nextDeviceFeatures));
         m_CommandPool.reset(new VulkanCommandPool(*m_Device, m_Device->GetGraphicsQueueFamilyIndex(), true));
     }
 

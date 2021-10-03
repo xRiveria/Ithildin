@@ -1,5 +1,6 @@
 #pragma once
 #include "Core/Core.h"
+#include "Vulkan/VulkanImage.h"
 #include <memory>
 #include <vector>
 

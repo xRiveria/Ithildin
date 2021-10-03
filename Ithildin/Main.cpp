@@ -1,5 +1,5 @@
 #include "Core/Window.h"
-#include "Vulkan/VulkanApplication.h"
+#include "Vulkan/Application.h"
 #include "Vulkan/VulkanUtilities.h"
 
 void SetVulkanDevice(Vulkan::Application& application);

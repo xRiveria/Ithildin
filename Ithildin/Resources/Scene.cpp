@@ -2,6 +2,7 @@
 #include "Vulkan/VulkanDebugUtilities.h"
 #include "Vulkan/VulkanBuffer.h"
 #include "Vulkan/VulkanBufferUtilities.h"
+#include "Vulkan/VulkanImage.h"
 #include "Vulkan/VulkanImageView.h"
 #include "Vulkan/SingleTimeCommands.h"
 #include "Vulkan/VulkanSampler.h"

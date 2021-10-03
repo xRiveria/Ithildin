@@ -1,5 +1,5 @@
 #pragma once
-#include "Vulkan/VulkanApplication.h"
+#include "Vulkan/Application.h"
 
 namespace Vulkan
 {
@@ -10,14 +10,13 @@ namespace Vulkan
     class VulkanImageView;
 }
 
-using namespace Vulkan;
 namespace Vulkan::Raytracing
 {
-    class Application : public Vulkan::Application
+    class RaytracingApplication : public Vulkan::Application
     {
     public:
-        Application(const WindowSettings& windowSettings, VkPresentModeKHR requestedPresentationMode, bool enabledValidationLayers);
-        ~Application();
+        RaytracingApplication(const WindowSettings& windowSettings, VkPresentModeKHR requestedPresentationMode, bool enabledValidationLayers);
+        ~RaytracingApplication();
         
         virtual void SetPhysicalDevice(VkPhysicalDevice physicalDevice, std::vector<const char*>& requiredExtensions,
                                        VkPhysicalDeviceFeatures& deviceFeatures, void* nextDeviceFeatures) override;
