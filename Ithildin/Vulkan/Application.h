@@ -15,6 +15,7 @@ namespace Vulkan
 {
     class VulkanSwapChain;
     class Window;
+    class VulkanDevice;
 
     class Application
     {
@@ -44,6 +45,7 @@ namespace Vulkan
         virtual void CreateSwapChain();
         virtual void DeleteSwapChain();
         virtual void OnDeviceSet();
+        const VulkanDevice& GetDevice() const { return *m_Device; }
 
         // Input
         virtual void OnKey(int key, int scanCode, int action, int mods) { }

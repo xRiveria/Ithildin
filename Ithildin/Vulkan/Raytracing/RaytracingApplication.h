@@ -36,10 +36,10 @@ namespace Vulkan::Raytracing
 
     private:
         // Raytracing
-        std::unique_ptr<class VulkanDeviceProcedures> m_DeviceProcedures;
+        std::unique_ptr<class VulkanRaytracingCommandList> m_DeviceCommandList;
         std::unique_ptr<class VulkanRaytracingProperties> m_RaytracingProperties;
-        std::vector<class VulkanBottomLevelAccelerationStructure> m_BottomAccelerationStructure;
-        std::vector<class VulkanTopLevelAccelerationStructure> m_TopLevelAccelerationStructure;
+        std::vector<class VulkanBottomLevelAS> m_BottomAccelerationStructure;
+        std::vector<class VulkanTopLevelAS> m_TopLevelAccelerationStructure;
         std::unique_ptr<class VulkanRaytracingPipeline> m_RaytracingPipeline;
         std::unique_ptr<class VulkanShaderBindingTable> m_ShaderBindingTable;
 

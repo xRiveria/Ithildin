@@ -1,5 +1,6 @@
 #include "VulkanBuffer.h"
 #include "SingleTimeCommands.h"
+#include "VulkanDevice.h"
 
 namespace Vulkan
 {
