@@ -33,8 +33,8 @@ namespace Vulkan
         protected:
             const VulkanRaytracingCommandList& m_CommandList;
             const VkBuildAccelerationStructureFlagsKHR m_BuildFlags;
-            VkAccelerationStructureBuildGeometryInfoKHR m_BuildGeometryInfo;
-            VkAccelerationStructureBuildSizesInfoKHR m_BuildSizesInfo;
+            VkAccelerationStructureBuildGeometryInfoKHR m_BuildGeometryInfo = {};
+            VkAccelerationStructureBuildSizesInfoKHR m_BuildSizesInfo = {};
 
         private:
             const VulkanDevice& m_Device;

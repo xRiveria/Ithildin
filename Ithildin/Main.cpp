@@ -1,5 +1,5 @@
 #include "Core/Window.h"
-#include "Vulkan/Application.h"
+#include "Raytracer.h"
 #include "Vulkan/VulkanUtilities.h"
 
 void SetVulkanDevice(Vulkan::Application& application);
@@ -25,7 +25,7 @@ int main(int argc, int argv[])
     /// Print Swapchain Information
     /// Run
 
-    Vulkan::Application application(windowSettings, VkPresentModeKHR::VK_PRESENT_MODE_IMMEDIATE_KHR, true); // We will present presents as soon as they're avaliable.
+    Raytracer application(windowSettings, VkPresentModeKHR::VK_PRESENT_MODE_IMMEDIATE_KHR); // We will present presents as soon as they're avaliable.
     SetVulkanDevice(application);
     application.OnUpdate();
 

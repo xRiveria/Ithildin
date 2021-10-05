@@ -36,12 +36,24 @@ namespace Vulkan::Raytracing
 
     private:
         // Raytracing
-        std::unique_ptr<class VulkanRaytracingCommandList> m_DeviceCommandList;
+        std::unique_ptr<class VulkanRaytracingCommandList> m_RaytracingCommandList;
         std::unique_ptr<class VulkanRaytracingProperties> m_RaytracingProperties;
-        std::vector<class VulkanBottomLevelAS> m_BottomAccelerationStructure;
-        std::vector<class VulkanTopLevelAS> m_TopLevelAccelerationStructure;
         std::unique_ptr<class VulkanRaytracingPipeline> m_RaytracingPipeline;
         std::unique_ptr<class VulkanShaderBindingTable> m_ShaderBindingTable;
+
+        std::vector<class VulkanBottomLevelAS> m_BottomAccelerationStructures;
+        std::unique_ptr<VulkanBuffer> m_BottomASBuffer;
+        std::unique_ptr<VulkanDeviceMemory> m_BottomASBufferMemory;
+        std::unique_ptr<VulkanBuffer> m_BottomASScratchBuffer;
+        std::unique_ptr<VulkanDeviceMemory> m_BottomASScratchBufferMemory;
+
+        std::vector<class VulkanTopLevelAS> m_TopAccelerationStructures;
+        std::unique_ptr<VulkanBuffer> m_TopASBuffer;
+        std::unique_ptr<VulkanDeviceMemory> m_TopASBufferMemory;
+        std::unique_ptr<VulkanBuffer> m_TopASScratchBuffer;
+        std::unique_ptr<VulkanDeviceMemory> m_TopASScratchBufferMemory;
+        std::unique_ptr<VulkanBuffer> m_InstancesBuffer;
+        std::unique_ptr<VulkanDeviceMemory> m_InstancesBufferMemory;
 
         std::unique_ptr<VulkanImage> m_AccumulationImage;
         std::unique_ptr<VulkanDeviceMemory> m_AccumulationImageMemory;

@@ -86,11 +86,6 @@ namespace Vulkan
         m_Device->WaitIdle(); // Ensure that all queued operations in a single frame are complete.
     }
 
-    const Resources::Scene& Application::GetScene() const
-    {
-        return *m_Scene;
-    }
-
     void Application::DrawFrame()
     {
         constexpr auto noTimeout = std::numeric_limits<uint64_t>::max();
@@ -194,8 +189,8 @@ namespace Vulkan
         const Resources::Scene& scene = GetScene();
 
         VkDescriptorSet descriptorSets[] = { m_GraphicsPipeline->GetDescriptorSet(imageIndex) };
-        VkBuffer vertexBuffers[] = { m_Scene->GetVertexBuffer().GetHandle() };
-        const VkBuffer indexBuffer = m_Scene->GetIndexBuffer().GetHandle();
+        VkBuffer vertexBuffers[] = { scene.GetVertexBuffer().GetHandle() };
+        const VkBuffer indexBuffer = scene.GetIndexBuffer().GetHandle();
         VkDeviceSize offsets[] = { 0 };
 
         vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_GraphicsPipeline->GetHandle());
@@ -268,28 +263,9 @@ namespace Vulkan
         m_CommandBuffers.reset(new VulkanCommandBuffers(*m_CommandPool, static_cast<uint32_t>(m_SwapChainFramebuffers.size())));
     }
 
-    void Application::OnDeviceSet()
-    {
-        LoadScene(0);
-    }
-
-    void Application::LoadScene(uint32_t sceneIndex)
-    {
-        auto [models, textures] = SceneList::s_AllScenes[sceneIndex].second(m_CameraInitialState);
-
-        // If there are no textures, add a dummy one. It makes the pipeline setup a lot easier.
-        if (textures.empty())
-        {
-            textures.push_back(Resources::Texture::LoadTexture("../Assets/Textures/White.png", Vulkan::SamplerConfiguration()));
-        }
-
-        m_Scene.reset(new Resources::Scene(*m_CommandPool, std::move(models), std::move(textures), true));
-    }
-
-
     void Application::UpdateUniformBuffer(uint32_t imageIndex)
     {
-        // m_UniformBuffers[imageIndex].SetValue(GetUniformBufferObject(m_SwapChain->GetExtent()));
+        m_UniformBuffers[imageIndex].SetValue(GetUniformBufferObject(m_SwapChain->GetExtent()));
     }
 
     void Application::RecreateSwapChain()
