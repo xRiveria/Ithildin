@@ -229,11 +229,11 @@ void Raytracer::OnKey(int key, int scanCode, int action, int mods)
         {
             switch (key)
             {
-                case GLFW_KEY_F1: m_UserSettings.m_ShowSettings = !m_UserSettings.m_ShowSettings; break;
-                case GLFW_KEY_F2: m_UserSettings.m_ShowOverlay = !m_UserSettings.m_ShowOverlay; break;
+                case GLFW_KEY_M: m_UserSettings.m_ShowSettings = !m_UserSettings.m_ShowSettings; break;
+                case GLFW_KEY_P: m_UserSettings.m_ShowOverlay = !m_UserSettings.m_ShowOverlay; break;
                 case GLFW_KEY_R:  m_UserSettings.m_IsRaytracingEnabled = !m_UserSettings.m_IsRaytracingEnabled; break;
                 case GLFW_KEY_H:  m_UserSettings.m_ShowHeatmap = !m_UserSettings.m_ShowHeatmap; break;
-                case GLFW_KEY_P:  m_IsWireframe = !m_IsWireframe; break;
+                case GLFW_KEY_L:  m_IsWireframe = !m_IsWireframe; break;
                 default: break;
             }
         }
