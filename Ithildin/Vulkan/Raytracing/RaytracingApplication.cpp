@@ -270,7 +270,7 @@ namespace Vulkan::Raytracing
 
         m_BottomASBuffer.reset(new VulkanBuffer(GetDevice(), totalMemory.accelerationStructureSize, VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR));
         m_BottomASBufferMemory.reset(new VulkanDeviceMemory(m_BottomASBuffer->AllocateMemory(VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)));
-        m_BottomASScratchBuffer.reset(new VulkanBuffer(GetDevice(), totalMemory.buildScratchSize, VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT | VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR));
+        m_BottomASScratchBuffer.reset(new VulkanBuffer(GetDevice(), totalMemory.buildScratchSize, VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT | VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR));
         m_BottomASScratchBufferMemory.reset(new VulkanDeviceMemory(m_BottomASScratchBuffer->AllocateMemory(VK_MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)));
 
         debugUtilities.SetObjectName(m_BottomASBuffer->GetHandle(), "BLAS Buffer");
@@ -312,7 +312,7 @@ namespace Vulkan::Raytracing
         }
 
         // Create and copy instances buffer (do it in a seperate one-time synchronous command buffer).
-        VulkanBufferUtilities::CreateDeviceBuffer(GetCommandPool(), "TLAS Instances", VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT, instances, m_InstancesBuffer, m_InstancesBufferMemory);
+        VulkanBufferUtilities::CreateDeviceBuffer(GetCommandPool(), "TLAS Instances", VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT | VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR, instances, m_InstancesBuffer, m_InstancesBufferMemory);
 
         // Memory Barrier for BLAS Builds
         VulkanAccelerationStructure::MemoryBarrier(commandBuffer);
@@ -325,7 +325,7 @@ namespace Vulkan::Raytracing
         m_TopASBuffer.reset(new VulkanBuffer(GetDevice(), totalMemory.accelerationStructureSize, VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR));
         m_TopASBufferMemory.reset(new VulkanDeviceMemory(m_TopASBuffer->AllocateMemory(VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)));
 
-        m_TopASScratchBuffer.reset(new VulkanBuffer(GetDevice(), totalMemory.buildScratchSize, VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT | VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR));
+        m_TopASScratchBuffer.reset(new VulkanBuffer(GetDevice(), totalMemory.buildScratchSize, VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT | VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR));
         m_TopASScratchBufferMemory.reset(new VulkanDeviceMemory(m_TopASScratchBuffer->AllocateMemory(VK_MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)));
 
         debugUtilities.SetObjectName(m_TopASBuffer->GetHandle(), "TLAS Buffer");

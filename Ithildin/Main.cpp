@@ -1,8 +1,38 @@
 #include "Core/Window.h"
 #include "Raytracer.h"
 #include "Vulkan/VulkanUtilities.h"
+#include "Editor/UserSettings.h"
 
 void SetVulkanDevice(Vulkan::Application& application);
+
+namespace LaunchUtilities
+{
+    UserSettings CreateUserSettings()
+    {
+        UserSettings userSettings = {};
+
+        userSettings.m_IsBenchmarkingEnabled = false;
+        userSettings.m_BenchmarkNextScenes = false;
+        userSettings.m_BenchmarkMaxTime = 60;
+
+        userSettings.m_SceneIndex = 1;
+
+        userSettings.m_IsRaytracingEnabled = true;
+        userSettings.m_IsRayAccumulationEnabled = true;
+        userSettings.m_NumberOfSamples = 8;
+        userSettings.m_NumberOfBounces = 16;
+        userSettings.m_MaxNumberOfSamples = 64 * 1024;
+
+        userSettings.m_ShowSettings = !userSettings.m_IsBenchmarkingEnabled;
+        userSettings.m_ShowOverlay = true;
+
+        userSettings.m_ShowHeatmap = false;
+        userSettings.m_HeatmapScale = 1.5f;
+
+        return userSettings;
+    }
+}
+
 
 int main(int argc, int argv[])
 {
@@ -24,8 +54,9 @@ int main(int argc, int argv[])
     /// Set Device
     /// Print Swapchain Information
     /// Run
+    const UserSettings userSettings = LaunchUtilities::CreateUserSettings();
 
-    Raytracer application(windowSettings, VkPresentModeKHR::VK_PRESENT_MODE_IMMEDIATE_KHR); // We will present presents as soon as they're avaliable.
+    Raytracer application(userSettings, windowSettings, VkPresentModeKHR::VK_PRESENT_MODE_IMMEDIATE_KHR); // We will present presents as soon as they're avaliable.
     SetVulkanDevice(application);
     application.OnUpdate();
 
@@ -85,3 +116,4 @@ void SetVulkanDevice(Vulkan::Application& application)
 
     application.SetPhysicalDevice(*result);
 }
+

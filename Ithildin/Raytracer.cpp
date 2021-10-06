@@ -3,7 +3,9 @@
 #include "Resources/UniformBuffer.h"
 #include "Resources/Texture.h"
 #include "Resources/Model.h"
+#include "Vulkan/VulkanSwapChain.h"
 #include "Vulkan/VulkanCommandPool.h"
+#include "Vulkan/VulkanDevice.h"
 #include "Core/Window.h"
 
 namespace RaytracerUtilities
@@ -16,8 +18,9 @@ namespace RaytracerUtilities
 #endif
 }
 
-Raytracer::Raytracer(const Vulkan::WindowSettings& windowSettings, VkPresentModeKHR requestedPresentationMode) 
-    : Vulkan::Raytracing::RaytracingApplication(windowSettings, requestedPresentationMode, RaytracerUtilities::EnableValidationLayers)
+Raytracer::Raytracer(const UserSettings& userSettings, const Vulkan::WindowSettings& windowSettings, VkPresentModeKHR requestedPresentationMode)
+                   : Vulkan::Raytracing::RaytracingApplication(windowSettings, requestedPresentationMode, RaytracerUtilities::EnableValidationLayers), 
+                     m_UserSettings(userSettings)
 {
     CheckFramebufferSize();
 }
@@ -26,7 +29,6 @@ Raytracer::~Raytracer()
 {
     m_Scene.reset();
 }
-
 
 const Resources::Scene& Raytracer::GetScene() const
 {
@@ -39,19 +41,19 @@ Resources::UniformBufferObject Raytracer::GetUniformBufferObject(VkExtent2D exte
 
     Resources::UniformBufferObject uniformBufferObject = {};
     uniformBufferObject.m_ModelView = m_ModelViewController.GetModelView();
-    uniformBufferObject.m_Projection = glm::perspective(glm::radians(45.0f), static_cast<float>(extent.width) / static_cast<float>(extent.height), 0.1f, 10000.0f);
+    uniformBufferObject.m_Projection = glm::perspective(glm::radians(m_UserSettings.m_FieldOfView), static_cast<float>(extent.width) / static_cast<float>(extent.height), 0.1f, 10000.0f);
     uniformBufferObject.m_Projection[1][1] *= -1; // Inverting Y for Vulkan, https://matthewwellings.com/blog/the-new-vulkan-coordinate-system/
     uniformBufferObject.m_ModelViewInverse = glm::inverse(uniformBufferObject.m_ModelView);
     uniformBufferObject.m_ProjectionInverse = glm::inverse(uniformBufferObject.m_Projection);
-    uniformBufferObject.m_Aperture = 0.05f;
-    uniformBufferObject.m_FocusDistance = 13.1f;
+    uniformBufferObject.m_Aperture = m_UserSettings.m_Aperture;
+    uniformBufferObject.m_FocusDistance = m_UserSettings.m_FocusDistance;
     uniformBufferObject.m_TotalSamplesCount = m_TotalNumberOfSamples;
     uniformBufferObject.m_SampleCount = m_NumberOfSamples;
-    uniformBufferObject.m_BounceCount = 32;
+    uniformBufferObject.m_BounceCount = m_UserSettings.m_NumberOfBounces;
     uniformBufferObject.m_RandomSeed = 1;
     uniformBufferObject.m_HasSky = true;
-    uniformBufferObject.m_ShowHeatMap = false;
-    uniformBufferObject.m_HeatmapScale = 1.0f;
+    uniformBufferObject.m_ShowHeatMap = m_UserSettings.m_ShowHeatmap;
+    uniformBufferObject.m_HeatmapScale = m_UserSettings.m_HeatmapScale;
 
     return uniformBufferObject;
 }
@@ -81,7 +83,7 @@ void Raytracer::OnDeviceSet()
 {
     RaytracingApplication::OnDeviceSet();
 
-    LoadScene(0);
+    LoadScene(m_UserSettings.m_SceneIndex);
 
     CreateAccelerationStructures();
 }
@@ -89,8 +91,87 @@ void Raytracer::OnDeviceSet()
 void Raytracer::CreateSwapChain()
 {
     RaytracingApplication::CreateSwapChain();
-    /// User Interface Stuff
+    
+    m_Editor.reset(new Editor(GetCommandPool(), GetSwapChain(), GetDepthBuffer(), m_UserSettings));
+    m_ResetAccumulation = true;
+
     CheckFramebufferSize();
+}
+
+void Raytracer::DeleteSwapChain()
+{
+    m_Editor.reset();
+    RaytracingApplication::DeleteSwapChain();
+}
+
+void Raytracer::DrawFrame()
+{
+    // Check if the scene has been changed by the user.
+    if (m_SceneIndex != static_cast<uint32_t>(m_UserSettings.m_SceneIndex))
+    {
+        // Finish outstanding operations.
+        GetDevice().WaitIdle();
+        DeleteSwapChain();
+        DeleteAccelerationStructures();
+        LoadScene(m_UserSettings.m_SceneIndex);
+        CreateAccelerationStructures();
+        CreateSwapChain();
+        return;
+    }
+
+    if (m_ResetAccumulation || m_UserSettings.RequireAccumulationReset(m_PreviousSettings) || !m_UserSettings.m_IsRayAccumulationEnabled)
+    {
+        m_TotalNumberOfSamples = 0;
+        m_ResetAccumulation = false;
+    }
+
+    m_PreviousSettings = m_UserSettings;
+
+    // Keep track of our sample count.
+    m_NumberOfSamples = glm::clamp(m_UserSettings.m_MaxNumberOfSamples - m_TotalNumberOfSamples, 0u, m_UserSettings.m_NumberOfSamples);
+    m_TotalNumberOfSamples += m_NumberOfSamples;
+
+    Application::DrawFrame();
+}
+
+
+void Raytracer::Render(VkCommandBuffer commandBuffer, uint32_t imageIndex)
+{
+    // Record delta time between calls to Render.
+    const auto previousTime = m_Time;
+    m_Time = GetWindow().GetTime();
+    const auto deltaTime = m_Time - previousTime;
+
+    // Update the camera position/angle.
+    m_ResetAccumulation = m_ModelViewController.UpdateCamera(m_CameraInitialState.m_ControlSpeed, deltaTime);
+
+    // Check the current state of the benchmark and update it for the new frame.
+    CheckAndUpdateBenchmarkState(previousTime);
+
+    // Render the scene.
+    if (m_UserSettings.m_IsRaytracingEnabled)
+    {
+        Vulkan::Raytracing::RaytracingApplication::Render(commandBuffer, imageIndex);
+    }
+    else
+    {
+        Vulkan::Application::Render(commandBuffer, imageIndex);
+    }
+
+    // Render the UI
+    Statistics statistics = {};
+    statistics.m_FramebufferSize = GetWindow().GetFramebufferSize();
+    statistics.m_FrameRate = static_cast<float>(1 / deltaTime);
+
+    if (m_UserSettings.m_IsRaytracingEnabled)
+    {
+        const VkExtent2D extent = GetSwapChain().GetExtent();
+
+        statistics.m_RayRate = static_cast<float>(double(extent.width * extent.height) * m_NumberOfSamples / (deltaTime * 1000000000));
+        statistics.m_TotalSamples = m_TotalNumberOfSamples;
+    }
+
+    m_Editor->Render(commandBuffer, GetSwapchainFramebuffer(imageIndex), statistics);
 }
 
 void Raytracer::LoadScene(uint32_t sceneIndex)
@@ -106,66 +187,98 @@ void Raytracer::LoadScene(uint32_t sceneIndex)
     m_Scene.reset(new Resources::Scene(GetCommandPool(), std::move(models), std::move(textures), true));
     m_SceneIndex = sceneIndex;
 
+    m_UserSettings.m_FieldOfView = m_CameraInitialState.m_FieldOfView;
+    m_UserSettings.m_Aperture = m_CameraInitialState.m_Aperture;
+    m_UserSettings.m_FocusDistance = m_CameraInitialState.m_FocusDistance;
+
     m_ModelViewController.Reset(m_CameraInitialState.m_ModelView);
 
+    m_PeriodTotalFrames = 0;
     m_ResetAccumulation = true;
 }
 
-void Raytracer::DeleteSwapChain()
+void Raytracer::CheckAndUpdateBenchmarkState(double previousTime)
 {
-    /// Delete UI
-    RaytracingApplication::DeleteSwapChain();
-}
-
-void Raytracer::DrawFrame()
-{
-    if (m_ResetAccumulation)
+    if (!m_UserSettings.m_IsBenchmarkingEnabled)
     {
-        m_TotalNumberOfSamples = 0;
-        m_ResetAccumulation = false;
-    }
-
-    // Keep track of our sample count.
-    m_TotalNumberOfSamples += m_NumberOfSamples;
-
-    Application::DrawFrame();
-}
-
-void Raytracer::Render(VkCommandBuffer commandBuffer, uint32_t imageIndex)
-{
-    // Record delta time between calls to Render.
-    const auto previousTime = m_Time;
-    m_Time = GetWindow().GetTime();
-    const auto deltaTime = m_Time - previousTime;
-
-    // Update the camera position/angle.
-    m_ResetAccumulation = m_ModelViewController.UpdateCamera(m_CameraInitialState.m_ControlSpeed, deltaTime);
-
-    // Render the scene.
-    if (true)
-    {
-        Vulkan::Raytracing::RaytracingApplication::Render(commandBuffer, imageIndex);
-    }
-    else
-    {
-        Vulkan::Application::Render(commandBuffer, imageIndex);
+        return;
     }
 }
 
 void Raytracer::OnKey(int key, int scanCode, int action, int mods)
 {
+    if (m_Editor->WantsToCaptureKeyboard())
+    {
+        return;
+    }
+
+    if (action == GLFW_PRESS)
+    {
+        switch (key)
+        {
+            case GLFW_KEY_ESCAPE:
+                GetWindow().Close();
+                break;
+
+            default:
+                break;
+        }
+
+        // Settings
+        if (!m_UserSettings.m_IsBenchmarkingEnabled)
+        {
+            switch (key)
+            {
+                case GLFW_KEY_F1: m_UserSettings.m_ShowSettings = !m_UserSettings.m_ShowSettings; break;
+                case GLFW_KEY_F2: m_UserSettings.m_ShowOverlay = !m_UserSettings.m_ShowOverlay; break;
+                case GLFW_KEY_R:  m_UserSettings.m_IsRaytracingEnabled = !m_UserSettings.m_IsRaytracingEnabled; break;
+                case GLFW_KEY_H:  m_UserSettings.m_ShowHeatmap = !m_UserSettings.m_ShowHeatmap; break;
+                case GLFW_KEY_P:  m_IsWireframe = !m_IsWireframe; break;
+                default: break;
+            }
+        }
+    }
+
+    // Camera Motions
+    if (!m_UserSettings.m_IsBenchmarkingEnabled)
+    {
+        m_ResetAccumulation = m_ModelViewController.OnKey(key, scanCode, action, mods);
+    }
 }
 
 void Raytracer::OnCursorMoved(double xPosition, double yPosition)
 {
+    if (!HasSwapChain() || m_UserSettings.m_IsBenchmarkingEnabled || m_Editor->WantsToCaptureKeyboard() || m_Editor->WantsToCaptureMouse())
+    {
+        return;
+    }
+
+    // Camera Position
+    m_ResetAccumulation = m_ModelViewController.OnCursorPosition(xPosition, yPosition);
 }
 
 void Raytracer::OnMouseButton(int button, int action, int mods)
 {
+    if (!HasSwapChain() || m_UserSettings.m_IsBenchmarkingEnabled || m_Editor->WantsToCaptureMouse())
+    {
+        return;
+    }
+
+    // Camera Motions
+    m_ResetAccumulation = m_ModelViewController.OnMouseButton(button, action, mods);
 }
 
 void Raytracer::OnScroll(double xOffset, double yOffset)
 {
+    if (!HasSwapChain() || m_UserSettings.m_IsBenchmarkingEnabled || m_Editor->WantsToCaptureMouse())
+    {
+        return;
+    }
+
+    const auto previousFOV = m_UserSettings.m_FieldOfView;
+    m_UserSettings.m_FieldOfView = glm::clamp(static_cast<float>(previousFOV - yOffset), m_UserSettings.m_FieldOfViewValueMinimum, m_UserSettings.m_FieldOfViewValueMaximum);
+
+    m_ResetAccumulation = previousFOV != m_UserSettings.m_FieldOfView;
 }
 
 void Raytracer::CheckFramebufferSize() const

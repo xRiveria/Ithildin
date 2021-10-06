@@ -2,7 +2,7 @@
 #include <vector>
 #include "../Core/WindowUtilities.h"
 #include "../Core/Core.h"
-#include "SceneList.h"
+#include "VulkanFramebuffer.h"
 
 namespace Resources
 {
@@ -17,6 +17,7 @@ namespace Vulkan
     class Window;
     class VulkanDevice;
     class VulkanCommandPool;
+    class VulkanDepthBuffer;
 
     class Application
     {
@@ -28,7 +29,7 @@ namespace Vulkan
         const std::vector<VkPhysicalDevice>& GetPhysicalDevices() const;
 
         const VulkanSwapChain& GetSwapChain() const { return *m_SwapChain; }
-        const Window& GetWindow() const { return *m_Window; }
+        Window& GetWindow() const { return *m_Window; }
         bool HasSwapChain() const { return m_SwapChain.get(); }
 
         void SetPhysicalDevice(VkPhysicalDevice physicalDevice);
@@ -49,6 +50,8 @@ namespace Vulkan
         const VulkanDevice& GetDevice() const { return *m_Device; }
         const std::vector<Resources::UniformBuffer>& GetUniformBuffers() const { return m_UniformBuffers; }
         VulkanCommandPool& GetCommandPool() const { return *m_CommandPool; };
+        const VulkanDepthBuffer& GetDepthBuffer() const { return *m_DepthBuffer; }
+        const VulkanFramebuffer& GetSwapchainFramebuffer(const size_t i) const { return m_SwapChainFramebuffers[i]; }
 
         // Input
         virtual void OnKey(int key, int scanCode, int action, int mods) { }
@@ -62,9 +65,11 @@ namespace Vulkan
         void UpdateUniformBuffer(uint32_t imageIndex);
         void RecreateSwapChain();
 
+    protected:
+        bool m_IsWireframe = false;
+
     private:
         // Properties
-        bool m_IsWireframe = false;
         const VkPresentModeKHR m_PresentationMode;
 
     private:        
@@ -77,7 +82,7 @@ namespace Vulkan
         std::unique_ptr<class VulkanSwapChain> m_SwapChain;
         std::unique_ptr<class VulkanDepthBuffer> m_DepthBuffer;
         std::unique_ptr<class VulkanGraphicsPipeline> m_GraphicsPipeline;
-        std::vector<class VulkanFramebuffer> m_SwapChainFramebuffers;
+        std::vector<VulkanFramebuffer> m_SwapChainFramebuffers;
         std::unique_ptr<class VulkanCommandBuffers> m_CommandBuffers;
 
         std::vector<Resources::UniformBuffer> m_UniformBuffers;

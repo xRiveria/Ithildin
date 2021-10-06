@@ -27,7 +27,12 @@ public:
         bool m_HasSky;
     };
 
+    static SceneAssets CubeAndSpheres(CameraInitialState& cameraState);
+    static SceneAssets RayTracingInOneWeekend(CameraInitialState& cameraState);
     static SceneAssets CornellBox(CameraInitialState& cameraState);
+    static SceneAssets PlanetsInOneWeekend(CameraInitialState& cameraState);
+    static SceneAssets LucyInOneWeekend(CameraInitialState& cameraState);
+    static SceneAssets CornellBoxLucy(CameraInitialState& cameraState);
 
     static const std::vector<std::pair<std::string, std::function<SceneAssets(CameraInitialState& initialState)>>> s_AllScenes;
 };

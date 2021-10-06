@@ -13,6 +13,7 @@ namespace Resources
         Texture() = default;
         Texture(const Texture& texture) = default;
         Texture(Texture&& texture) = default;
+        ~Texture() = default;
 
         const unsigned char* GetPixels() const { return m_Pixels.get(); }
         int GetWidth() const { return m_Width; }
@@ -26,7 +27,7 @@ namespace Resources
         int m_Width;
         int m_Height;
         int m_Channels;
-        std::unique_ptr<unsigned char, void(*)(void* stbiValueToDelete)> m_Pixels;
+        std::unique_ptr<unsigned char, void(*)(void*)> m_Pixels;
     };
  
 }

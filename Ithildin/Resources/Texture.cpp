@@ -26,7 +26,7 @@ namespace Resources
         return Texture(width, height, channels, pixels);
     }
 
-    Texture::Texture(int width, int height, int channels, unsigned char* pixels)
+    Texture::Texture(int width, int height, int channels, unsigned char* const pixels)
         : m_Width(width), m_Height(height), m_Channels(channels), m_Pixels(pixels, stbi_image_free)
     {
 

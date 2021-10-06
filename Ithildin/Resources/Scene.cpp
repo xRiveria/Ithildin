@@ -17,7 +17,7 @@ namespace Resources
 {
 
     Scene::Scene(Vulkan::VulkanCommandPool& commandPool, std::vector<Model>&& models, std::vector<Texture>&& textures, bool usedForRayTracing)
-               : m_Models(std::move(models)), m_Textures(std::move(textures))
+        : m_Models(std::move(models)), m_Textures(std::move(textures))
     {
         // Concatenate all the models in our scene.
         std::vector<Vertex> vertices;
@@ -37,7 +37,7 @@ namespace Resources
             offsets.emplace_back(indexOffset, vertexOffset);
 
             // Copy model data one after the other by appending to the end of our vector.
-            vertices.insert (vertices.end(), model.GetVertices().begin(), model.GetVertices().end());
+            vertices.insert(vertices.end(), model.GetVertices().begin(), model.GetVertices().end());
             indices.insert(indices.end(), model.GetIndices().begin(), model.GetIndices().end());
             materials.insert(materials.end(), model.GetMaterials().begin(), model.GetMaterials().end());
 
@@ -60,28 +60,28 @@ namespace Resources
                 aabbs.emplace_back();
                 procedurals.emplace_back();
             }
+        }
 
-            const int flag = usedForRayTracing ? VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT : 0;
+        const int flag = usedForRayTracing ? VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT | VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR : 0;
 
-            Vulkan::VulkanBufferUtilities::CreateDeviceBuffer(commandPool, "Vertices", VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | flag, vertices, m_VertexBuffer, m_VertexBufferMemory);
-            Vulkan::VulkanBufferUtilities::CreateDeviceBuffer(commandPool, "Indices", VK_BUFFER_USAGE_INDEX_BUFFER_BIT | flag, indices, m_IndexBuffer, m_IndexBufferMemory);
-            Vulkan::VulkanBufferUtilities::CreateDeviceBuffer(commandPool, "Materials", flag, materials, m_MaterialBuffer, m_MaterialBufferMemory);
-            Vulkan::VulkanBufferUtilities::CreateDeviceBuffer(commandPool, "Offsets", flag, offsets, m_OffsetBuffer, m_OffsetBufferMemory);
+        Vulkan::VulkanBufferUtilities::CreateDeviceBuffer(commandPool, "Vertices", VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | flag, vertices, m_VertexBuffer, m_VertexBufferMemory);
+        Vulkan::VulkanBufferUtilities::CreateDeviceBuffer(commandPool, "Indices", VK_BUFFER_USAGE_INDEX_BUFFER_BIT | flag, indices, m_IndexBuffer, m_IndexBufferMemory);
+        Vulkan::VulkanBufferUtilities::CreateDeviceBuffer(commandPool, "Materials", flag, materials, m_MaterialBuffer, m_MaterialBufferMemory);
+        Vulkan::VulkanBufferUtilities::CreateDeviceBuffer(commandPool, "Offsets", flag, offsets, m_OffsetBuffer, m_OffsetBufferMemory);
 
-            Vulkan::VulkanBufferUtilities::CreateDeviceBuffer(commandPool, "AAVBBs", flag, aabbs, m_AABBBuffer, m_AABBBufferMemory);
-            Vulkan::VulkanBufferUtilities::CreateDeviceBuffer(commandPool, "Procedurals", flag, procedurals, m_ProceduralBuffer, m_ProceduralBufferMemory);
+        Vulkan::VulkanBufferUtilities::CreateDeviceBuffer(commandPool, "AA BBs", flag, aabbs, m_AABBBuffer, m_AABBBufferMemory);
+        Vulkan::VulkanBufferUtilities::CreateDeviceBuffer(commandPool, "Procedurals", flag, procedurals, m_ProceduralBuffer, m_ProceduralBufferMemory);
 
-            // Update all textures.
-            m_TextureImages.reserve(m_Textures.size());
-            m_TextureImageViews.resize(m_Textures.size());
-            m_TextureSamplers.resize(m_Textures.size());
+        // Update all textures.
+        m_TextureImages.reserve(m_Textures.size());
+        m_TextureImageViews.resize(m_Textures.size());
+        m_TextureSamplers.resize(m_Textures.size());
 
-            for (size_t i = 0; i != m_Textures.size(); ++i)
-            {
-                m_TextureImages.emplace_back(new TextureImage(commandPool, m_Textures[i]));
-                m_TextureImageViews[i] = m_TextureImages[i]->GetImageView().GetHandle();
-                m_TextureSamplers[i] = m_TextureImages[i]->GetSampler().GetHandle();
-            }
+        for (size_t i = 0; i != m_Textures.size(); ++i)
+        {
+            m_TextureImages.emplace_back(new TextureImage(commandPool, m_Textures[i]));
+            m_TextureImageViews[i] = m_TextureImages[i]->GetImageView().GetHandle();
+            m_TextureSamplers[i] = m_TextureImages[i]->GetSampler().GetHandle();
         }
     }
 

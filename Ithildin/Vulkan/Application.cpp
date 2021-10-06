@@ -253,7 +253,7 @@ namespace Vulkan
             m_UniformBuffers.emplace_back(*m_Device);
         }
 
-        m_GraphicsPipeline.reset(new VulkanGraphicsPipeline(*m_SwapChain, *m_DepthBuffer, m_UniformBuffers, GetScene(), false));
+        m_GraphicsPipeline.reset(new VulkanGraphicsPipeline(*m_SwapChain, *m_DepthBuffer, m_UniformBuffers, GetScene(), m_IsWireframe));
 
         for (const auto& imageView : m_SwapChain->GetImageViews())
         {
