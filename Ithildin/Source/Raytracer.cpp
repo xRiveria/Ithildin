@@ -14,7 +14,7 @@ namespace RaytracerUtilities
 #ifdef NDEBUG
         false;
 #else
-        true;
+        false;
 #endif
 }
 

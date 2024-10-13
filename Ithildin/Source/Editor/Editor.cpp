@@ -11,9 +11,9 @@
 #include "Vulkan/VulkanSwapChain.h"
 #include "Vulkan/VulkanRenderPass.h"
 #include "../Resources/Scene.h"
-#include "Backend/Source/imgui.h"
-#include "Backend/Source/imgui_impl_glfw.h"
-#include "Backend/Source/imgui_impl_vulkan.h"
+#include "imgui.h"
+#include "imgui_impl_glfw.cpp"
+#include "imgui_impl_vulkan.cpp"
 
 namespace EditorUtilities
 {

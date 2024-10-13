@@ -1,6 +1,5 @@
 #pragma once
 
-#define NOMINMAX
 #define GLFW_INCLUDE_NONE //Explictly prevents GLFW from including any OpenGL headers.
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>

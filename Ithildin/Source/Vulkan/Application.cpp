@@ -27,6 +27,7 @@ namespace Vulkan
     Application::Application(const WindowSettings& windowSettings, VkPresentModeKHR presentationMode, bool enableValidationLayers)
         : m_PresentationMode(presentationMode)
     {
+        enableValidationLayers = false;
         const std::vector<const char*> validationLayers = enableValidationLayers ? std::vector<const char*> { "VK_LAYER_KHRONOS_validation" } : std::vector<const char*>();
 
         m_Window.reset(new Window(windowSettings));

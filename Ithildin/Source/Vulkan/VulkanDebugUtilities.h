@@ -42,7 +42,7 @@ namespace Vulkan
 			namingDescription.objectType = objectType;
 			namingDescription.pObjectName = name;
 
-			CheckResult(vkSetDebugUtilsObjectNameEXT(m_Device, &namingDescription), "Set Object Name");
+			//CheckResult(vkSetDebugUtilsObjectNameEXT(m_Device, &namingDescription), "Set Object Name");
 			#endif
 		}
 
