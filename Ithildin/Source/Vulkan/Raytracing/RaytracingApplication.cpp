@@ -268,8 +268,8 @@ namespace Vulkan::Raytracing
         // Allocate the structures memory.
         const VkAccelerationStructureBuildSizesInfoKHR totalMemory = ASUtilities::GetTotalRequirements(m_BottomAccelerationStructures);
 
-        m_BottomASBuffer.reset(new VulkanBuffer(GetDevice(), totalMemory.accelerationStructureSize, VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR));
-        m_BottomASBufferMemory.reset(new VulkanDeviceMemory(m_BottomASBuffer->AllocateMemory(VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)));
+        m_BottomASBuffer.reset(new VulkanBuffer(GetDevice(), totalMemory.accelerationStructureSize, VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR | VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT));
+        m_BottomASBufferMemory.reset(new VulkanDeviceMemory(m_BottomASBuffer->AllocateMemory(VK_MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)));
         m_BottomASScratchBuffer.reset(new VulkanBuffer(GetDevice(), totalMemory.buildScratchSize, VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT | VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR));
         m_BottomASScratchBufferMemory.reset(new VulkanDeviceMemory(m_BottomASScratchBuffer->AllocateMemory(VK_MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)));
 

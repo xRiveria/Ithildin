@@ -34,7 +34,7 @@ namespace Vulkan
 		template <typename T>
 		void SetObjectName(const T& object, const char* name, VkObjectType objectType) const
 		{
-			#ifndef NDEBUG
+			#ifdef _DEBUG
 			VkDebugUtilsObjectNameInfoEXT namingDescription = {};
 			namingDescription.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT;
 			namingDescription.pNext = nullptr;
@@ -42,7 +42,7 @@ namespace Vulkan
 			namingDescription.objectType = objectType;
 			namingDescription.pObjectName = name;
 
-			//CheckResult(vkSetDebugUtilsObjectNameEXT(m_Device, &namingDescription), "Set Object Name");
+			CheckResult(vkSetDebugUtilsObjectNameEXT(m_Device, &namingDescription), "Set Object Name");
 			#endif
 		}
 

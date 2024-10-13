@@ -11,8 +11,8 @@
 namespace RaytracerUtilities
 {
     const bool EnableValidationLayers =
-#ifdef NDEBUG
-        false;
+#ifdef _DEBUG
+        true;
 #else
         false;
 #endif

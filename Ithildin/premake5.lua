@@ -26,6 +26,16 @@ project "Ithildin"
         "%{IncludeDirectories.ImGui}",
     }
 
+    dependson
+    {
+        "ImGui"
+    }
+
+    links
+    {
+        "ImGui"
+    }
+
     defines 
     {
         "NOMINMAX",

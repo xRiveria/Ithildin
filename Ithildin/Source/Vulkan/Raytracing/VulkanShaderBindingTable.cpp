@@ -68,7 +68,7 @@ namespace Vulkan::Raytracing
         // Allocate buffer and memory.
         const VulkanDevice& device = raytracingProperties.GetDevice();
 
-        m_Buffer.reset(new VulkanBuffer(device, shaderBindingTableSize, VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT));
+        m_Buffer.reset(new VulkanBuffer(device, shaderBindingTableSize, VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT | VK_BUFFER_USAGE_SHADER_BINDING_TABLE_BIT_KHR));
         m_BufferMemory.reset(new VulkanDeviceMemory(m_Buffer->AllocateMemory(VK_MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT)));
 
         // Generate the table.

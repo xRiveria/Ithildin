@@ -11,7 +11,7 @@ namespace Vulkan
         }
         else
         {
-            std::cout << "Successfully performed: " << operation << "\n";
+            // std::cout << "Successfully performed: " << operation << "\n";
         }
     }
 
@@ -19,7 +19,7 @@ namespace Vulkan
     {
         switch (result)
         {
-            #define StringResult(result) case VK_##result: return #result
+                #define StringResult(result) case VK_##result: return #result
                 StringResult(SUCCESS);
                 StringResult(NOT_READY);
                 StringResult(TIMEOUT);
